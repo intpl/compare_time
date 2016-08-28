@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-  s.name        = 'CompareTime'
+  s.name        = 'compare_time'
   s.version     = '0.0.1'
   s.date        = '2016-08-28'
   s.summary     = "Compare execution times for given blocks"
