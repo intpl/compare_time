@@ -1,0 +1,6 @@
+## Usage
+    CompareTime.new.compare(:whatever_name_you_want) {
+     ...
+    }.with(:whatever_name_you_want2) {
+     ...
+    }.print_results
