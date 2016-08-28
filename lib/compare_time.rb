@@ -28,9 +28,10 @@ class CompareTime
   end
 
   def print_results
-    puts results[0].colorize(:green)
+    calculated_results = results
+    puts calculated_results[0].colorize(:green)
 
-    results.drop(1).each do |res|
+    calculated_results.drop(1).each do |res|
       puts res
     end
   end
@@ -45,3 +46,4 @@ class CompareTime
     $stdout = original_stdout
   end
 end
+
