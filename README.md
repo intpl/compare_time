@@ -8,7 +8,7 @@ Let's compare something pretty obvious:
 
     please = CompareTime.new( # both params are optional
       5,                      # number of repetitions. default: 1
-      silence_output: false   # whether to silence the output. default: true
+      silence_output: false   # whether to silence the output, doesn't matter here. default: true
       )
 
     please.compare("4096 bit") do
