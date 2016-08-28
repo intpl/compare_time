@@ -5,41 +5,65 @@ require 'colorize'
 class CompareTime
   attr_reader :benchmarks
 
-  def initialize(repetitions = 1)
+  def initialize(repetitions = 1, silence_output: true)
+    @silence_output = silence_output
     @repetitions = repetitions
     @benchmarks = {}
   end
 
   def compare(symbol, &block)
-    execute_and_save(symbol, block)
-    self
+    if @silence_output
+      silence_stdout { execute_and_save(symbol, block) }
+    else
+      execute_and_save(symbol, block)
+    end and self
   end
 
-  def results
-    @benchmarks.sort_by(&:last).map do |arr|
-      "#{arr[0]}: #{'%.10f' % arr[1]}"
-    end
+  def sort_results
+    @benchmarks.sort_by(&:last)
   end
 
   def print_results
-    calculated_results = results
-    puts calculated_results[0].colorize(:green)
+    serialized_results = sort_results.map { |res| serialize_result(res) }
+    puts serialized_results[0].colorize(:green)
 
-    calculated_results.drop(1).each do |res|
+    serialized_results.drop(1).each do |res|
       puts res
     end
   end
 
   alias_method :with, :compare
 
-  private def execute_and_save(symbol, block)
-    original_stdout = $stdout
-    $stdout = StringIO.new
+  private
+
+  def serialize_result(arr)
+    "#{arr[0]}: #{'%.10f' % arr[1]}"
+  end
+
+  def execute_and_save(symbol, block)
+    if @repetitions == 1
+      @benchmarks[symbol] = single_repetition(block)
+    else
+      @benchmarks[symbol] = multiple_repetitions(block)
+    end
+  end
+
+  def single_repetition(block)
+    Benchmark.realtime(&block)
+  end
+
+  def multiple_repetitions(block)
     arr = []
     @repetitions.times do
-      arr << Benchmark.realtime(&block)
+      arr << single_repetition(block)
     end
-    @benchmarks[symbol] = arr.inject(0.0) { |sum, el| sum + el } / arr.size
+    arr.inject(0.0) { |sum, el| sum + el } / arr.size
+  end
+
+  def silence_stdout(&block)
+    original_stdout = $stdout
+    $stdout = StringIO.new
+    block.call
   ensure
     $stdout = original_stdout
   end
