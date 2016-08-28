@@ -6,7 +6,7 @@ Let's compare something pretty obvious:
     require 'compare_time'
     require 'openssl'
 
-    please = CompareTime.new
+    please = CompareTime.new(5) # yea, you can pass as many repetitions you want. average will be calculated
 
     please.compare("4096 bit") do
       OpenSSL::PKey::RSA.new 4096

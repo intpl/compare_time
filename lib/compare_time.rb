@@ -2,17 +2,11 @@ require 'stringio'
 require 'benchmark'
 require 'colorize'
 
-# CompareTime.new.compare(:whatever_name_you_want) {
-#  ...
-# }.with(:whatever_name_you_want2) {
-#  ...
-# }.print_results
-
 class CompareTime
   attr_reader :benchmarks
 
-  def initialize()
-    # add how many times
+  def initialize(repetitions = 1)
+    @repetitions = repetitions
     @benchmarks = {}
   end
 
@@ -41,7 +35,11 @@ class CompareTime
   private def execute_and_save(symbol, block)
     original_stdout = $stdout
     $stdout = StringIO.new
-    @benchmarks[symbol] = Benchmark.realtime(&block)
+    arr = []
+    @repetitions.times do
+      arr << Benchmark.realtime(&block)
+    end
+    @benchmarks[symbol] = arr.inject(0.0) { |sum, el| sum + el } / arr.size
   ensure
     $stdout = original_stdout
   end
