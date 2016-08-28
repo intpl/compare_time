@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'compare_time'
-  s.version     = '0.0.1'
+  s.version     = '0.0.2'
   s.date        = '2016-08-28'
   s.summary     = "Compare execution times for given blocks"
   s.description = "Compare execution times for given blocks, right?"
@@ -9,4 +9,5 @@ Gem::Specification.new do |s|
   s.files       = ["lib/compare_time.rb"]
   s.homepage    = 'http://rubygems.org/gems/compare_time'
   s.license     = 'MIT'
+  s.requirements << 'colorize'
 end
